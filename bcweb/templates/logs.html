@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+</head>
+
+<body>
+    <h1>Enregistrements table bcweb_printdebug</h1>
+    {% for log in logs reversed %}
+        <p>{{ log.id }} | {{ log.created_at }} | {{log.message}}</p>
+    {% empty %}
+        <p>La liste est vide.</p>
+    {% endfor %}
+</body>
+
+</html>

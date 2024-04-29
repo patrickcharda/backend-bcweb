@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+</head>
+
+<body>
+    <h1>N° de pièce : {{ piece.pce_num }}</h1>
+    <p>Date de fabrication : {{ piece.pce_date_prod|date:'d-m-Y' }}</p>
+    <p>Type : {{ piece.pce_type_pdt }}</p>
+    <p>Observations : {{ piece.pce_observ_pce }}</p>
+    <p>Qté / Unité : {{ piece.pce_qte }} / {{ piece.pce_unit }}</p>
+    <p>Poids : {{ piece.pce_poids }}</p>
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+</head>
+
+<body>
+    <div>frm public</div>
+    <h1>N° de pièce: {{ qrpiece.qrp_num }}</h1>
+    <p>Ref client : {{ qrpiece.qrp_ref_client }}</p>
+    <p>Type : {{ qrpiece.qrp_type_pdt }}</p>
+    <p>Qté / Unité : {{ qrpiece.qrp_qte }} / {{ qrpiece.qrp_unit }}</p>
+    <p>Poids : {{ qrpiece.qrp_poids }}</p>
+    <h2>Articles pièce</h2>
+    {% for article in qrpiece_articles reversed %}
+        <p>{{ article.qrpa_libel }} | {{ article.qrpa_qte }} | {{ article.qrpa_unit}}</p>
+    {% empty %}
+        <p>Aucun article pièce associé</p>
+    {% endfor %}
+</body>
+
+</html>
