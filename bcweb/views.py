@@ -27,6 +27,7 @@ from django.contrib.auth.models import User
 from django.db import transaction
 import json
 from rest_framework.pagination import PageNumberPagination
+from datetime import datetime
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -615,9 +616,9 @@ def ouvrir(request):
         cmdeUser.save()
         #print(type(data["bc_num"]))
         # afficher caractères invisibles (espace, retour à la ligne) : print(repr(data["bc_num"]))
-        bcOpen = Bordereau.objects.get(pk=data["bc_num"].strip())
+        """ bcOpen = Bordereau.objects.get(pk=data["bc_num"].strip())
         bcOpen.bc_statut = "en cours"
-        bcOpen.save()
+        bcOpen.save() """
         #print(isinstance(bcOpen, Bordereau))
         message = {"message": "ouvrir"}
         
@@ -693,6 +694,7 @@ def checkstatutbc(request):
 @api_view(["POST"])
 @transaction.atomic
 def valider(request):
+    #sert à enregistrer dans postgres et dans access
     name = "valider"
     data = JSONParser().parse(request)
     trace = PrintDebug(
@@ -708,14 +710,14 @@ def valider(request):
         cmdeUser.command = "valider"
         cmdeUser.bc_num = data["bc_num"]
         cmdeUser.save()
-        bc = Bordereau.objects.get(bc_num=data["bc_num"])
-        bc.bc_statut = "validé"
-        bc.save()
-        message = {"message": "valider"}
+        """ bc = Bordereau.objects.get(bc_num=data["bc_num"])
+        bc.bc_statut = "enregistré"
+        bc.save() """
+        message = {"message": "validé"}
     except (Command.DoesNotExist, Bordereau.DoesNotExist) as e:
         # si l'utilisateur n'existe pas ds la table Command ou si le Bordereau n'est pas trouvé
         trace = PrintDebug(
-            message="anomalie valider: pas de ligne de commande pour le user OU bordereau inconnu"
+            message="anomalie enregistrer-valider: pas de ligne de commande pour le user OU bordereau inconnu"
             + data["username"]
             + " "
             + data["bc_num"]
@@ -732,6 +734,95 @@ def valider(request):
         return JSONResponse(message)
     return JSONResponse(message)
 
+@csrf_exempt
+@permission_classes((permissions.IsAuthenticated,))
+@api_view(["POST"])
+@transaction.atomic
+def livrable(request):
+    #sert à enregistrer dans postgres et dans access
+    name = "livrable"
+    data = JSONParser().parse(request)
+    trace = PrintDebug(
+        message="passage ds la fonction livrable..."
+        + data["username"]
+        + " bc_num : "
+        + data["bc_num"]
+    )
+    trace.save()
+    try:
+        # recherche de la ligne de commande de l'utilisateur
+        cmdeUser = Command.objects.get(iduser=data["username"])
+        cmdeUser.command = "bc_ready"
+        cmdeUser.bc_num = data["bc_num"]
+        cmdeUser.save()
+        """ bc = Bordereau.objects.get(bc_num=data["bc_num"])
+        bc.bc_statut = "livrable"
+        bc.save() """
+        message = {"message": "livrable"}
+    except (Command.DoesNotExist, Bordereau.DoesNotExist) as e:
+        # si l'utilisateur n'existe pas ds la table Command ou si le Bordereau n'est pas trouvé
+        trace = PrintDebug(
+            message="anomalie cmde livrable: pas de ligne de commande pour le user OU bordereau inconnu"
+            + data["username"]
+            + " "
+            + data["bc_num"]
+            + "; error :"
+            + str(e)
+        )
+        trace.save()
+        message = {
+            "message": "anomalie cmde livrable: pas de ligne de commande pour user "
+            + data["username"]
+            + "; error :"
+            + str(e)
+        }
+        return JSONResponse(message)
+    return JSONResponse(message)
+
+@csrf_exempt
+@permission_classes((permissions.IsAuthenticated,))
+@api_view(["POST"])
+@transaction.atomic
+def updateDatePces(request):
+    name = "updateDatePces"
+    data = JSONParser().parse(request)
+    trace = PrintDebug(
+        message="passage ds la fonction updateDatePces..."
+        + data["username"]
+        + " bc_num : "
+        + data["bc_num"]
+    )
+    trace.save()
+    try:
+        # recherche de ttes les pièces ayant comme clé étrangère le bc num récupéré
+        pces = Piece.objects.filter(pce_num_bl=data["bc_num"])
+        # Get the current date and time as a naive datetime object
+        naive_datetime = datetime.now().replace(microsecond=0)
+
+        for pce in pces:
+            # Update fields of piece as needed
+            pce.pce_date_web = naive_datetime
+            # Save the changes
+            pce.save()
+
+        message = {"message": "la date de màj des pces est ok"}
+    except (Piece.DoesNotExist) as e:
+        # si l'utilisateur n'existe pas ds la table Command ou si le Bordereau n'est pas trouvé
+        trace = PrintDebug(
+            message="anomalie updateDatePces: pas de pce attachée au bc "+ data["bc_num"]
+            + " " + data["username"]
+            + "; error :"
+            + str(e)
+        )
+        trace.save()
+        message = {
+            "anomalie updateDatePces: pas de pce attachée au bc "+ data["bc_num"]
+            + data["username"]
+            + "; error :"
+            + str(e)
+        }
+        return JSONResponse(message)
+    return JSONResponse(message)
 
 @csrf_exempt
 @permission_classes((permissions.IsAuthenticated,))

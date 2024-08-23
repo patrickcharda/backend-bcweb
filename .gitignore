@@ -1,2 +1,11 @@
 venv/*
 restful01/.env
+bcweb/__pycache__/views.cpython-312.pyc
+bcweb/__pycache__/urls.cpython-312.pyc
+btapps/__pycache__/models.cpython-312.pyc
+btapps/__pycache__/urls.cpython-312.pyc
+btapps/__pycache__/views.cpython-312.pyc
+restful01/__pycache__/settings.cpython-312.pyc
+bcweb/views 02082028.py
+btapps/migrations/__pycache__/0002_reset.cpython-312.pyc
+settings.py

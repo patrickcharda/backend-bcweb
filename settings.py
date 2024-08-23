@@ -3,6 +3,7 @@ from restful01.settings import *
 DEBUG = False
 SECRET_KEY='FlLmRZe6JDS4rA0a1tSd2rf9AO9yop9cra6TuAmEfKMjoQePzG50FilmEco'
 ALLOWED_HOSTS = ['demo-btw.monkey-soft.fr','www.demo-btw.monkey-soft.fr','localhost','127.0.0.1','185.31.40.22']
+CORS_ALLOWED_ORIGINS='http://localhost:8000,http://127.0.0.1:8000,https://192.168.1.51,https://lpb.monkey-soft.fr'
 """ DATABASES = {
     'default': {
 	'ENGINE': 'django.db.backends.postgresql',
@@ -13,11 +14,11 @@ ALLOWED_HOSTS = ['demo-btw.monkey-soft.fr','www.demo-btw.monkey-soft.fr','localh
 	'PORT': 5432,
     }
 } """
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-STATIC_ROOT = '/var/cache/back-lpb/static/'
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+""" STATIC_ROOT = '/var/cache/back-lpb/static/'
 STATIC_URL = '/static/'
 MEDIA_ROOT = '/var/opt/back-lpb/media/'
-MEDIA_URL = '/media/'
+MEDIA_URL = '/media/' """
 # MAILS
 SERVER_EMAIL = 'noreply@back-lpb.monkey-soft.fr'
 DEFAULT_FROM_EMAIL = 'noreply@back-lpb.monkey-soft.fr'
@@ -43,8 +44,13 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
+
+CORS_ALL_ORIGINS=True
+CSRF_ALLOW_CREDENTIALS=True
 
 #LOGIN_REDIRECT_URL = "/foxweb"
 #LOGOUT_REDIRECT_URL = "/accounts/login"
+
+
 

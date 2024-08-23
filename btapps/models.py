@@ -40,3 +40,8 @@ class Code(models.Model):
     # codes erreurs
     code = models.CharField(primary_key=True, max_length=20)
     description = models.CharField(max_length=254, blank=True, null=True)
+
+class Reset(models.Model):
+    # codes autorisant- le reset de Wib
+    reset_key = models.CharField(primary_key=True, max_length=20)
+    used = models.BooleanField(default=False, blank=True, null=True)

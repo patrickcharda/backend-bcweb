@@ -9,12 +9,13 @@ from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
-from bcweb.models import PrintDebug
+from bcweb.models import PrintDebug, Command
 from btapps.models import Session
+from btapps.models import Reset
 from django.contrib.auth.hashers import check_password
 from accounts.models import CustomUser
 from django.http import HttpResponse
-
+from django.db import transaction
 
 
 class JSONResponse(HttpResponse):
@@ -118,5 +119,65 @@ def preapplogin(request):
         
         return JSONResponse(result)
 
-    
+""" @api_view(["POST"])
+def cmdreset(request):
+    data = JSONParser().parse(request)
+    searched_key = data['reset_key']
+    try:
+        reset_key = Reset.objects.get(reset_key=searched_key)
+    except:
+        result = {"message":"code reset invalide"}
+        print(result)
+        return JSONResponse(result)
+    if (reset_key and not reset_key.used) or (reset_key.reset_key == "#***#"):
+        # rechercher s'il existe déjà un enregistrement Command avec le iduser "system"
+        try:
+            cmde_reset = Command.objects.get(iduser="system")
+            cmde_reset.command="reset"
+            cmde_reset.save()
+            result = {"message":"commande reset envoyée"}
+            return JSONResponse(result)
+        except Command.DoesNotExist as e:
+            new_cmde_reset = Command(command="reset")
+            new_cmde_reset.save()
+            reset_key.used = True
+            reset_key.save()
+            result = {"message":"commande reset envoyée"}
+            return JSONResponse(result)
+        except Exception as e:
+            result = {"message": "la commande reset ne peut-être créée", "error": str(e)}
+            return JSONResponse(result)
+    else:
+        result = {"message":"code reset déjà utilisé"}
+        return JSONResponse(result) """
+
+@api_view(["POST"])
+def cmdreset(request):
+    data = JSONParser().parse(request)
+    searched_key = data['reset_key']
+    try:
+        reset_key = Reset.objects.get(reset_key=searched_key)
+    except Reset.DoesNotExist:
+        result = {"message":"code reset invalide"}
+        return JSONResponse(result, status=status.HTTP_404_NOT_FOUND)
+    if (reset_key and not reset_key.used) or (reset_key.reset_key == "#***#"):
+        # rechercher s'il existe déjà un enregistrement Command avec le iduser "system"
+        try:
+            with transaction.atomic():
+                cmde_reset, created = Command.objects.get_or_create(iduser="system", defaults={"command": "reset"})
+                if not created:
+                    cmde_reset.command = "reset"
+                    cmde_reset.save()
+                
+                reset_key.used = True
+                reset_key.save()
+                
+                result = {"message": "commande reset envoyée"}
+                return JSONResponse(result, status=status.HTTP_200_OK)
+        except Exception as e:
+            result = {"message": "la commande reset ne peut-être créée", "error": str(e)}
+            return JSONResponse(result, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        result = {"message":"code reset déjà utilisé"}
+        JSONResponse(result, status=status.HTTP_400_BAD_REQUEST)
 

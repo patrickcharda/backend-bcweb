@@ -32,5 +32,10 @@ urlpatterns = [
         views.userapplogout,
         name="userapplogout",
     ),
+    re_path(
+        r"^cmdreset/$",
+        views.cmdreset,
+        name="cmdreset",
+    ),
 ]
 

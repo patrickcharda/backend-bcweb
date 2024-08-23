@@ -11,6 +11,11 @@ urlpatterns = [
         views.BordereauDetail.as_view(),
         name=views.BordereauDetail.name,
     ),
+    re_path(
+        r"^bc/updatedatepces/$",
+        views.updateDatePces,
+        name="updateDatePces",
+    ),
     re_path(r"^pces/$", views.PieceList.as_view(), name=views.PieceList.name),
     re_path(
         r"^pce/(?P<pk>[a-z-0-9]+)$",
@@ -61,6 +66,7 @@ urlpatterns = [
     re_path(r"^ouvrir/$", views.ouvrir, name="ouvrir"),
     re_path(r"^checkstatutbc/$", views.checkstatutbc, name="checkstatutbc"),
     re_path(r"^valider/$", views.valider, name="valider"),
+    re_path(r"^livrable/$", views.livrable, name="livrable"),
     re_path(r"^record/$", views.record, name="record"),
     re_path(r"^checklogs/$", views.checklogs, name="checklogs"),
     re_path(r"^sendok/$", views.sendok, name="sendok"),

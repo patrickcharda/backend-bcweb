@@ -10,16 +10,19 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("SECRET_KEY")
+#SECRET_KEY = config("SECRET_KEY")
+SECRET_KEY='oi0jyf1h0x2ir3hmg%&@sc^&_ibb9)8)rlfh_2@&5%!d6gb47e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG", cast=bool)
+#DEBUG = config("DEBUG", cast=bool)
+DEBUG = True
 
 # ALLOWED_HOSTS = ["localhost", "127.0.0.1", "192.168.1.22", "*"]
 #ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 #CORS_ALLOWED_HOSTS =  ["*"]
-#CORS_ALLOW_ALL_ORIGINS = True
-#CORS_ALLOW_HEADERS = ["*"]
+CORS_ALLOW_ALL_ORIGINS = True
+CSRF_TRUSTED_ALL_ORIGINS = True
+CORS_ALLOW_HEADERS = ["*"]
 #CORS_ALLOWED_ORIGINS = ["*"]
 ALLOWED_HOSTS = ['*']
 #CORS_ORIGIN_ALLOW_ALL = True
@@ -62,8 +65,8 @@ MIDDLEWARE = [
 ]
 
 #CORS_ALLOWED_ORIGINS = ['https://lpb.monkey-soft.fr:55443']
-CORS_ALLOWED_ORIGINS = ['http://192.168.1.17', 'http://192.168.1017:5500', 'http://10.0.2.2', 'http://10.0.2.2:5500', 'http://127.0.0.1', 'http://127.0.0.1:5500']
-CORS_ALLOW_HEADERS = ['Authorization','content-type','fingerprint','appliname','username']
+#CORS_ALLOWED_ORIGINS = ['http://192.168.1.17', 'http://192.168.1017:5500', 'http://10.0.2.2', 'http://10.0.2.2:5500', 'http://127.0.0.1:8000', 'http://127.0.0.1:5500']
+#CORS_ALLOW_HEADERS = ['Authorization','Content-Type','fingerprint','appliname','username','accept','accept-encoding','origin','dnt','user-agent','x-csrftoken','x-requested-with']
 
 
 ROOT_URLCONF = "restful01.urls"
@@ -136,7 +139,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
