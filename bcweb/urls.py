@@ -63,6 +63,7 @@ urlpatterns = [
     re_path(r"^reprise/$", views.reprise, name="reprise"),
     re_path(r"^fermer/$", views.fermer, name="fermer"),
     re_path(r"^checkok/$", views.checkok, name="checkok"),
+    re_path(r"^checkwib/$", views.checkwib, name="checkwib"),
     re_path(r"^ouvrir/$", views.ouvrir, name="ouvrir"),
     re_path(r"^checkstatutbc/$", views.checkstatutbc, name="checkstatutbc"),
     re_path(r"^valider/$", views.valider, name="valider"),

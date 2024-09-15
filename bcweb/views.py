@@ -593,6 +593,35 @@ def checkok(request):
         return JSONResponse(message)
     return JSONResponse(message)
 
+@csrf_exempt
+@permission_classes((permissions.IsAuthenticated,))
+@api_view(["POST"])
+def checkwib(request):
+    name = "checkwib"
+    data = JSONParser().parse(request)
+    trace = PrintDebug(message="passage ds la fonction checkwib..." + data["username"])
+    trace.save()
+    try:
+        # recherche de la ligne de commande de l'utilisateur
+        cmdeUser = Command.objects.get(iduser=data["username"])
+        message = {"message": cmdeUser.command}
+    except Command.DoesNotExist as e:
+        # si l'utilisateur n'existe pas ds la table Command
+        trace = PrintDebug(
+            message="anomalie checkwib: pas de ligne de commande pour user "
+            + data["username"]
+            + "; error : "
+            + str(e)
+        )
+        trace.save()
+        message = {
+            "message": "anomalie checkwib: pas de ligne de commande pour user "
+            + data["username"]
+            + "; error :"
+            + str(e)
+        }
+        return JSONResponse(message)
+    return JSONResponse(message)
 
 @csrf_exempt
 @permission_classes((permissions.IsAuthenticated,))

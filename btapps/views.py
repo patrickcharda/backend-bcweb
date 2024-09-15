@@ -98,12 +98,13 @@ def preapplogin(request):
     clear_password = data['password']
     try:
         user = CustomUser.objects.get(username=username)
+        print("preapplogin", result)
     except:
         result = {"login":"failed"}
-        #print(result)
+        print("preapplogin", result)
         return JSONResponse(result)
     if user and check_password(clear_password, user.password):
-        #print(user.username)
+        print(user.username)
         result = {"login":"success"}
         application= request.headers.get('appliname')
         try:
