@@ -65,20 +65,28 @@ def applogout(request):
     result = {"logout":"success"}
     return JSONResponse(result)
 
+@permission_classes((permissions.IsAuthenticated,))
 @api_view(["GET"])
 def userapplogout(request):
     name = "userapplogout"
     application= request.headers.get('appliname')
     username= request.headers.get('username')
-    #print(username)
-    #print(application)
+    token= request.headers.get('token')
+    """ auth_header = request.META['HTTP_AUTHORIZATION']
+    # The auth_header usually comes in the format 'Bearer <token>'
+    auth_type, token = auth_header.split()
+    if auth_type.lower() != 'bearer':
+        raise ValueError('Invalid token header. No credentials provided.') """
+    print(username)
+    print(application)
+    print(token)
     # get the username to log
         
     trace = PrintDebug(message="passage ds la fonction userapplogout ("+username+")")
     trace.save()
     # delete session
     try:
-        session_to_delete = Session.objects.filter(application=application, utilisateur=username)
+        session_to_delete = Session.objects.filter(application=application, utilisateur=username, token=token)
         print(session_to_delete.count())
         if session_to_delete.count() > 0:
             session_to_delete.delete()
@@ -98,7 +106,7 @@ def preapplogin(request):
     clear_password = data['password']
     try:
         user = CustomUser.objects.get(username=username)
-        print("preapplogin", result)
+        print("preapplogin", user.username)
     except:
         result = {"login":"failed"}
         print("preapplogin", result)
